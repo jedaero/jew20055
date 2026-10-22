@@ -1,23 +1,54 @@
-# 동의대학교 라이프복지학과 홈페이지
+# 동의대학교 라이프복지학과 웹 앱
 
-반응형 정적 홈페이지와 대학 생활 사진 갤러리입니다.
+기존 학과 소개와 대학 생활 갤러리에 ORBIT BREAKER 우주 게임을 통합한 정적 웹 앱입니다. 학과 홈페이지는 `/`, 갤러리는 `/campus.html`, 게임은 `/game/`에서 열립니다. 사진과 질문·답변은 Firebase Realtime Database를 사용합니다.
 
-## 파일 구성
+## 로컬 실행
 
-- `index.html`: 학과 홈페이지
-- `campus.html`: ‘대학 생활 엿보기’ 사진 갤러리
-- `images/campus/`: 갤러리 이미지 56장 (WebP)
-- `images/professor-je-seungwook.png`: 교수 소개 이미지
+Node.js와 pnpm을 설치한 뒤 저장소 루트에서 실행합니다.
 
-## GitHub Pages 배포
+```powershell
+pnpm install
+pnpm dev
+```
 
-이 폴더 안의 파일과 `images` 폴더 전체를 GitHub 저장소 루트에 올리세요. `index.html`, `campus.html`, `README.md`와 `images` 폴더의 경로 구조를 유지해야 합니다. 이후 저장소의 **Settings → Pages**에서 `main` 브랜치와 `/(root)`를 선택하면 공개할 수 있습니다.
+Firebase 웹 설정은 로컬 `.env.local`에서 읽습니다. `.env.example`을 복사해 실제 Firebase 웹 앱 값과 관리자 UID를 입력하세요. `.env.local`은 Git에 올라가지 않도록 제외되어 있습니다.
+
+## 빌드
+
+```powershell
+pnpm build
+```
+
+Vite가 홈페이지, 갤러리, 게임을 `dist/`로 빌드하고 `images/`의 기존 사진을 결과물에 복사합니다.
+
+## Firebase Hosting 배포
+
+기본 Firebase 프로젝트는 `project-1496496417088680513`입니다. Firebase CLI에 로그인한 뒤 빌드하고 Hosting만 배포합니다.
+
+```powershell
+pnpm dlx firebase-tools login
+pnpm build
+pnpm dlx firebase-tools deploy --only hosting
+```
+
+Firebase Realtime Database Rules는 `database.rules.json`에 있습니다. 이 프로젝트의 Rules는 이미 Firebase Console에 게시되어 있습니다. Rules를 바꾼 경우에만 다음 명령을 사용하세요.
+
+```powershell
+pnpm dlx firebase-tools deploy --only database
+```
+
+Firebase Hosting 주소는 `https://project-1496496417088680513.web.app/` 형태로 제공됩니다. GitHub Pages의 기존 주소는 계속 유지되며, Firebase 배포는 별도의 Hosting 주소에서 서비스됩니다.
+
+## GitHub Pages 참고
+
+원본 HTML과 이미지 디렉터리는 유지됩니다. `https://jedaero.github.io/jew20055/` 경로에 게임까지 제공하려면 다음 명령으로 GitHub Pages 경로 기준 빌드를 만든 뒤 `dist/` 내용을 배포해야 합니다.
+
+```powershell
+pnpm build:github
+```
+
+Firebase Hosting에서는 기본 `pnpm build`를 사용합니다. 두 배포 대상은 경로 기준이 다르므로 빌드를 다시 실행한 뒤 각 호스팅 대상에 배포하세요.
 
 ## 사진 안내
 
-제공받은 사진을 행사별 갤러리로 구성했습니다. 갤러리의 축하·기념 이미지 13장은 AI 생성 참고 이미지이며, 페이지에 별도로 표시했습니다.
-
-## 공식 정보
-
-- [라이프복지학과](https://deuhome.deu.ac.kr/llc/index.do)
-- [미래융합대학](https://deuhome.deu.ac.kr/future/index.do)
+갤러리의 일부 이미지는 AI 생성 참고 이미지이며 페이지에 별도로 표시합니다. 실제 행사 사진은 사용 허가를 확인한 뒤 게시하세요.

@@ -1,0 +1,39 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "photos": {
+      ".read": true,
+      ".indexOn": ["createdAt"],
+      "$photoId": {
+        ".write": "$photoId.matches(/^slot-[0-7]$/) && newData.exists()",
+        ".validate": "newData.hasChildren(['imageData', 'caption', 'createdAt'])",
+        "imageData": { ".validate": "newData.isString() && newData.val().length <= 200000" },
+        "caption": { ".validate": "newData.isString() && newData.val().length <= 160" },
+        "createdAt": { ".validate": "newData.isNumber()" },
+        "author": { ".validate": "newData.isString() && newData.val().length <= 40" },
+        "$other": { ".validate": false }
+      }
+    },
+    "questions": {
+      ".read": true,
+      ".indexOn": ["createdAt"],
+      "$questionId": {
+        ".write": "$questionId.matches(/^slot-(0|[1-9]|[1-9][0-9])$/) && newData.exists() && !newData.child('answer').exists() && !newData.child('answeredAt').exists()",
+        ".validate": "newData.hasChildren(['question', 'name', 'createdAt'])",
+        "question": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 500" },
+        "name": { ".validate": "newData.isString() && newData.val().length <= 40" },
+        "createdAt": { ".validate": "newData.isNumber()" },
+        "answer": {
+          ".write": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1'",
+          ".validate": "newData.isString() && newData.val().length <= 1000"
+        },
+        "answeredAt": {
+          ".write": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1'",
+          ".validate": "newData.isNumber()"
+        },
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}
