@@ -349,7 +349,7 @@ function OwnerBar({ user, isOwner }) {
   }
   return <div className="ownerbar">
     {isOwner && <span>관리자로 로그인했습니다. 사진 올리기와 답변 작성을 할 수 있습니다.</span>}
-    {user && !isOwner && <span>관리자 계정이 아닙니다 ({user.email}).</span>}
+    {user && !isOwner && <span>관리자 계정이 아닙니다 ({user.email}). 이 계정을 관리자로 쓰려면 다음 UID를 database.rules.json과 VITE_FIREBASE_OWNER_UID에 넣어 주세요: <code className="uid">{user.uid}</code></span>}
     {user ? <button className="link" onClick={() => signOut(auth)}>로그아웃</button> : <button className="link" onClick={login}>관리자 로그인</button>}
     <Notice tone="error">{error}</Notice>
   </div>
