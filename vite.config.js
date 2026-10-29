@@ -16,6 +16,7 @@ export default defineConfig({
       input: {
         home: resolve(root, 'index.html'),
         campus: resolve(root, 'campus.html'),
+        community: resolve(root, 'community.html'),
         game: resolve(root, 'game/index.html'),
       },
     },

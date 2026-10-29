@@ -21,4 +21,5 @@ if (firebaseApp && import.meta.env.VITE_FIREBASE_RECAPTCHA_SITE_KEY) {
 }
 export const auth = firebaseApp ? getAuth(firebaseApp) : null
 export const database = firebaseApp ? getDatabase(firebaseApp) : null
-export const ownerUid = import.meta.env.VITE_FIREBASE_OWNER_UID || ''
+// database.rules.json에 적힌 관리자 UID와 같아야 합니다.
+export const ownerUid = import.meta.env.VITE_FIREBASE_OWNER_UID || 'x2PfMwkpbmQQDudDhWH5lyKkkbh1'

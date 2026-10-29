@@ -2,36 +2,45 @@
   "rules": {
     ".read": false,
     ".write": false,
-    "photos": {
-      ".read": true,
-      ".indexOn": ["createdAt"],
-      "$photoId": {
-        ".write": "$photoId.matches(/^slot-[0-7]$/) && newData.exists()",
-        ".validate": "newData.hasChildren(['imageData', 'caption', 'createdAt'])",
-        "imageData": { ".validate": "newData.isString() && newData.val().length <= 200000" },
-        "caption": { ".validate": "newData.isString() && newData.val().length <= 160" },
-        "createdAt": { ".validate": "newData.isNumber()" },
-        "author": { ".validate": "newData.isString() && newData.val().length <= 40" },
-        "$other": { ".validate": false }
+    "gallery": {
+      "meta": {
+        ".read": true,
+        "$photoId": {
+          ".write": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1'",
+          ".validate": "newData.hasChildren(['caption', 'createdAt', 'width', 'height', 'bytes'])",
+          "caption": { ".validate": "newData.isString() && newData.val().length <= 200" },
+          "createdAt": { ".validate": "newData.isNumber()" },
+          "width": { ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1024" },
+          "height": { ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1024" },
+          "bytes": { ".validate": "newData.isNumber() && newData.val() <= 140000" },
+          "$other": { ".validate": false }
+        }
+      },
+      "thumbs": {
+        "$photoId": {
+          ".read": true,
+          ".write": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1'",
+          ".validate": "newData.isString() && newData.val().beginsWith('data:image/') && newData.val().length <= 20000"
+        }
+      },
+      "full": {
+        "$photoId": {
+          ".read": true,
+          ".write": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1'",
+          ".validate": "newData.isString() && newData.val().beginsWith('data:image/') && newData.val().length <= 120000"
+        }
       }
     },
-    "questions": {
+    "qna": {
       ".read": true,
-      ".indexOn": ["createdAt"],
       "$questionId": {
-        ".write": "$questionId.matches(/^slot-(0|[1-9]|[1-9][0-9])$/) && newData.exists() && !newData.child('answer').exists() && !newData.child('answeredAt').exists()",
-        ".validate": "newData.hasChildren(['question', 'name', 'createdAt'])",
+        ".write": "(auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1') || (!data.exists() && newData.exists())",
+        ".validate": "newData.hasChildren(['question', 'createdAt'])",
+        "name": { ".validate": "newData.isString() && newData.val().length <= 30" },
         "question": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 500" },
-        "name": { ".validate": "newData.isString() && newData.val().length <= 40" },
-        "createdAt": { ".validate": "newData.isNumber()" },
-        "answer": {
-          ".write": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1'",
-          ".validate": "newData.isString() && newData.val().length <= 1000"
-        },
-        "answeredAt": {
-          ".write": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1'",
-          ".validate": "newData.isNumber()"
-        },
+        "createdAt": { ".validate": "newData.isNumber() && (data.exists() ? newData.val() === data.val() : newData.val() === now)" },
+        "answer": { ".validate": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1' && newData.isString() && newData.val().length <= 2000" },
+        "answeredAt": { ".validate": "auth != null && auth.uid === 'x2PfMwkpbmQQDudDhWH5lyKkkbh1' && newData.isNumber()" },
         "$other": { ".validate": false }
       }
     }
